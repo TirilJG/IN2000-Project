@@ -21,6 +21,7 @@ class SunriseDataSource {
 
     val path = "https://in2000-apiproxy.ifi.uio.no/weatherapi/sunrise/2.0/.json?lat=59.933333&lon=10.716667&date=2022-03-17&offset=+01:00"
 
+    //De forskjellige leddene av url-en
     val mainpath = "https://in2000-apiproxy.ifi.uio.no/weatherapi/sunrise/2.0/.json?"
     val date = "date=2022-03-17"
     val days = "&days=3" //inkluderes om man vil hente data for mer enn én dag og viser da fremover i tid
@@ -28,15 +29,16 @@ class SunriseDataSource {
     val lat = "&lat=59.9"
     val lon = "&lon=10.7"
     val offset = "&offset=%2B01%3A00" //+01:00
+    //kan settes sammen slik:
+        val pathString = mainpath+date+days+lat+lon+offset
+
+    //anbefalte måten å sette opp parametere for å kunne lage endringer
     val parameters = listOf("date" to "2022-03-17", "days" to "3", "lat" to "59.9", "lon" to "10.7", "offset" to "%2B01%3A00")
 
     suspend fun fetchSunrise(): Location? {
         return try {
-            val pathString = mainpath+date+days+lat+lon+offset
-            Log.d("DATASOURCE", path)
-            //Log.d("DataSource", mainpath+parameters)
-            //val res = Fuel.get(mainpath, parameters).awaitString()
-            val res = Fuel.get(pathString).awaitString()
+
+            val res = Fuel.get(mainpath, parameters).awaitString()
             //Log.d("DATASOURCE", res)
             val response =  gson.fromJson(res, Base::class.java)
 
